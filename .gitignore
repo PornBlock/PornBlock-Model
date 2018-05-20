@@ -1,2 +1,5 @@
 Data/
 .vscode/
+src/PBModel/dataExtract/
+src/scrap.py
+*.pyc
