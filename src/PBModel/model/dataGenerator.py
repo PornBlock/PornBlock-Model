@@ -72,3 +72,10 @@ class DataGeneratorClass(keras.utils.Sequence):
                 continue
             y[i] = self.labels[ID]
         return X, y
+
+    def printDataStatistics(self):
+        print "\tPositive Images: ", len([id for id in self.list_IDs if self.labels[id] == 1])
+        print "\tNegative Images: ", len([id for id in self.list_IDs if self.labels[id] == 0])
+        print "\tBatch Size: ", self.batch_size
+        print "\tImg dimensions: ", self.dim
+        print "\tImg channels: ", self.n_channels

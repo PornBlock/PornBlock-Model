@@ -1,7 +1,6 @@
 """
 This file contains convolutional neural network based simple model which is trained from scratch
 Model Details:
-
 """
 import os
 import keras
@@ -95,15 +94,24 @@ class CustomDataGeneratorClass:
         self.ids["train"] = rawIds[:trainSize]
         self.ids["validation"] = rawIds[trainSize:]
 
+    def printDataStatistics(self):
+        print "################# TRAIN STATISTICS ######################"
+        self.trainingGenerator.printDataStatistics();
+        print "#########################################################\n"
+
+        print "################# VALIDATION STATISTICS #################"
+        self.validationGenerator.printDataStatistics()
+        print "#########################################################\n"
+
 class CustomModelClass:
     """
     This class contains information about model and datasource for training
     """
 
-    def __init__(self, debugMode = False):
+    def __init__(self, dataGenerator):
         self.img_width  = 32 
         self.img_height = 32 
-        self.dataGenerator = CustomDataGeneratorClass(debugMode = debugMode)
+        self.dataGenerator = dataGenerator
         self.getModel()
 
     def getModel(self):
@@ -142,18 +150,20 @@ class CustomModelClass:
         """
         Train model on the dataset
         """
+        self.dataGenerator.printDataStatistics()
         sE = len(self.dataGenerator.ids["train"])// 32
         sV = len(self.dataGenerator.ids["validation"])// 32
         self.model.fit_generator(
             generator=self.dataGenerator.trainingGenerator,
             steps_per_epoch= sE,
-            epochs=10,
+            epochs=2,
             validation_data=self.dataGenerator.validationGenerator,
             validation_steps=sV,
-            use_multiprocessing=True,
-            workers=2,
+            # use_multiprocessing=True,
+            # workers=2,
         )
     
 if __name__ == "__main__":
-    myModel = CustomModelClass(debugMode=True)
+    dataGenerator = CustomDataGeneratorClass(debugMode = True)
+    myModel = CustomModelClass(dataGenerator)
     myModel.train()
